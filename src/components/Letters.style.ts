@@ -7,6 +7,5 @@ export const LettersStyled = styled.div`
   justify-content: center;
 
   @media (max-width: 768px) {
-    gap: 15px;
   }
 `;

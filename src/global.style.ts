@@ -27,6 +27,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     display: flex;
     min-width: 320px;
+    max-width: 90%;
     justify-content: center;
     place-items: center;
     min-height: 100vh;

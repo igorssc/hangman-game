@@ -29,8 +29,8 @@ export const HangmanAnimation = () => {
   useEffect(() => {
     clear({
       ctx: getCtx(),
-      width: canvasRef.current?.clientWidth || 0,
-      height: canvasRef.current?.clientHeight || 0,
+      width: canvasRef.current?.width || 0,
+      height: canvasRef.current?.height || 0,
     });
 
     drawHangman(getCtx());

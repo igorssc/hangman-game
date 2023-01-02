@@ -10,8 +10,10 @@ export const SecretWord = () => {
     <>
       <SecretWordStyled word={secretWord}>
         {secretWord.split("").map((letter, index) => (
-          <div key={index}>
-            {chosenLetters.includes(removeSpecialCharacters(letter)) &&
+          <div key={index} className={letter === " " ? "space" : ""}>
+            {letter === " " && "-"}
+            {letter !== " " &&
+              chosenLetters.includes(removeSpecialCharacters(letter)) &&
               letter.toUpperCase()}
             <span />
           </div>

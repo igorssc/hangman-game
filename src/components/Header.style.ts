@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Title = styled.h1`
   font-family: low_budget;
-  font-size: 48px;
+  font-size: 42px;
   text-align: center;
   margin-top: 70px;
 
