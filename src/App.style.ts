@@ -9,6 +9,7 @@ export const ButtonsFooter = styled.div`
   @media (max-width: 768px) {
     > .restart {
       grid-column-end: span 2;
+      margin-bottom: 20px;
     }
   }
 

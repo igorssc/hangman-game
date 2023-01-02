@@ -5,4 +5,8 @@ export const LettersStyled = styled.div`
   flex-wrap: wrap;
   gap: 30px;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    gap: 15px;
+  }
 `;
