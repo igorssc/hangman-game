@@ -10,10 +10,13 @@ export const ButtonsFooter = styled.div`
     > .restart {
       grid-column-end: span 2;
     }
+    > .help {
+      grid-column-end: span 2;
+    }
   }
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     margin-bottom: 40px;
     gap: 30px;
   }

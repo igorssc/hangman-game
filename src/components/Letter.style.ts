@@ -30,8 +30,8 @@ export const LetterStyled = styled.span<LetterProps>`
   }
 
   @media (max-width: 768px) {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     padding: 15px;
     font-size: 1.1rem;
   }

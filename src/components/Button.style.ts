@@ -16,6 +16,7 @@ export const ButtonStyled = styled.button<ButtonProps>`
     props.scheme === "primary"
       ? props.theme.colors.primary
       : props.theme.colors.secondary};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 
   @media (min-width: 768px) {
     padding: 25px 80px;

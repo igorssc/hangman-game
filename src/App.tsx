@@ -8,7 +8,8 @@ import { Letters } from "./components/Letters";
 import { GameContext } from "./contexts/GameContext";
 
 export function App() {
-  const { level, setLevel, isPlaying, restart } = useContext(GameContext);
+  const { level, setLevel, isPlaying, restart, help, isUsedHelp } =
+    useContext(GameContext);
 
   return (
     <>
@@ -27,6 +28,17 @@ export function App() {
             className="restart"
           >
             Reiniciar
+          </Button>
+          <Button
+            onClick={() => {
+              help();
+            }}
+            small
+            disabled={isUsedHelp}
+            scheme="primary"
+            className="help"
+          >
+            Ajuda 🤩
           </Button>
           <Button
             onClick={() => setLevel(1)}

@@ -1,5 +1,6 @@
 import useEvent from "@react-hook/event";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { letters } from "../utils/alphabet";
 import { removeSpecialCharacters } from "../utils/format";
 import { easyWords, hardWords } from "../utils/words";
 
@@ -17,7 +18,9 @@ type GameData = {
   setLevel: React.Dispatch<React.SetStateAction<1 | 2>>;
   checkLetter: (letter: string) => void;
   restart: () => void;
+  help: () => void;
   isPlaying: boolean;
+  isUsedHelp: boolean;
 };
 
 export const GameContext = createContext({} as GameData);
@@ -30,6 +33,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const [chosenLetters, setChosenLetters] = useState<string[]>([]);
   const [level, setLevel] = useState<1 | 2>(1);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isUsedHelp, setIsUsedHelp] = useState(false);
 
   const selectRandomWord = () => {
     const words = level === 1 ? easyWords : hardWords;
@@ -50,7 +54,6 @@ export function GameProvider({ children }: GameProviderProps) {
     let wordSelected = randomWord().toUpperCase() as string;
 
     while (wordSelected === secretWord) {
-      console.log("a");
       wordSelected = randomWord().toUpperCase();
     }
 
@@ -76,6 +79,17 @@ export function GameProvider({ children }: GameProviderProps) {
       removeSpecialCharacters(letter).toUpperCase(),
     ];
 
+    if (isCorrect) {
+      const numberOfHits = secretWordFormated
+        .split("")
+        .filter((l) => l === letter);
+
+      setPoints(
+        (prev) =>
+          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+      );
+    }
+
     if (!isCorrect) {
       setNumErrors((prev) => prev + 1);
     }
@@ -86,7 +100,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setIsPlaying(false);
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
-        if (!currentChosenLetters.includes(l)) {
+        if (l !== " " && !currentChosenLetters.includes(l)) {
           return false;
         } else {
           return prev;
@@ -95,14 +109,45 @@ export function GameProvider({ children }: GameProviderProps) {
 
       if (isWinner) {
         setIsPlaying(false);
-        setPoints((prev) => prev + 1);
       }
     }
   };
 
+  const help = () => {
+    if (isUsedHelp) return;
+
+    const secretWordLetters = [
+      ...new Set(removeSpecialCharacters(secretWord).split("")),
+    ];
+
+    const lettersAvaiable = letters.filter((l) => !chosenLetters.includes(l));
+
+    const wrongLetters = lettersAvaiable.filter(
+      (l) => !secretWordLetters.includes(l)
+    );
+
+    const selectedLetters = [] as string[];
+
+    const removedLetters =
+      level === 1 ? Math.random() * (5 - 2) + 2 : Math.random() * (6 - 3) + 3;
+
+    while (selectedLetters.length < removedLetters) {
+      const temporaryLetter =
+        wrongLetters[Math.floor(Math.random() * wrongLetters.length)];
+
+      if (!selectedLetters.includes(temporaryLetter)) {
+        selectedLetters.push(temporaryLetter);
+      }
+    }
+
+    selectedLetters.forEach((l) => setChosenLetters((prev) => [...prev, l]));
+
+    setIsUsedHelp(true);
+  };
+
   useEffect(() => {
-    restart();
     setPoints(0);
+    restart();
   }, [level]);
 
   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -110,10 +155,17 @@ export function GameProvider({ children }: GameProviderProps) {
   };
 
   const restart = () => {
+    if (!isPlaying) {
+      if (numErrors > 5) {
+        setPoints(0);
+      }
+    }
+
     setNumErrors(0);
     setChosenLetters([]);
     selectRandomWord();
     setIsPlaying(true);
+    setIsUsedHelp(false);
   };
 
   useEvent(document.querySelector("body"), "keydown", (event) =>
@@ -133,6 +185,8 @@ export function GameProvider({ children }: GameProviderProps) {
         checkLetter,
         restart,
         isPlaying,
+        help,
+        isUsedHelp,
       }}
     >
       {children}

@@ -21,9 +21,9 @@ export const Backdrop = () => {
           <Winner>
             <h1>Vitória</h1>
             <br />
-            <h2>{true && "Você ganhou!"}</h2>
+            <h2>{true && "Você acertou a palavra, parabéns!"}</h2>
             <Button onClick={() => restart()} scheme="secondary">
-              Jogar novamente
+              Continuar
             </Button>
             <Fireworks />
           </Winner>
