@@ -25,14 +25,11 @@ export const RecordStyled = styled.table`
   th,
   td {
     padding: 0 15px;
+    font-weight: normal;
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
-    th:nth-child(3),
-    td:nth-child(3) {
-      display: none;
-    }
-
     td {
       font-size: 0.8rem;
     }

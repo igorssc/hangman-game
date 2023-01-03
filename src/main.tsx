@@ -10,9 +10,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <GameProvider>
       <ThemeProvider theme={CustomTheme}>
-        <div style={{ width: "100%" }}>
-          <App />
-        </div>
+        <App />
         <GlobalStyle />
       </ThemeProvider>
     </GameProvider>

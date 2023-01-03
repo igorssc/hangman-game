@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Backdrop } from "./components/Backdrop";
 import { Buttons } from "./components/Buttons";
+import { Container } from "./components/Container";
 import { Game } from "./components/Game";
 import { Header } from "./components/Header";
 import { Letters } from "./components/Letters";
@@ -12,12 +13,14 @@ export function App() {
 
   return (
     <>
-      {!isPlaying && <Backdrop />}
-      <Header />
-      <Game />
-      <Letters />
-      <Buttons />
-      <Records />
+      <Container>
+        {!isPlaying && <Backdrop />}
+        <Header />
+        <Game />
+        <Letters />
+        <Buttons />
+        <Records />
+      </Container>
     </>
   );
 }

@@ -21,24 +21,26 @@ const data = [
 export const Records = () => {
   return (
     <>
-      <RecordStyled>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Pontuação</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((value) => (
-            <tr key={value.id}>
-              <td>{value.name}</td>
-              <td>{value.score}</td>
-              <td>{value.date.toLocaleDateString("pt-BR")}</td>
+      <div style={{ width: "100%", overflowX: "scroll" }}>
+        <RecordStyled>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Pontuação</th>
+              <th>Data</th>
             </tr>
-          ))}
-        </tbody>
-      </RecordStyled>
+          </thead>
+          <tbody>
+            {data.map((value) => (
+              <tr key={value.id}>
+                <td>{value.name}</td>
+                <td>{value.score}</td>
+                <td>{value.date.toLocaleDateString("pt-BR")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </RecordStyled>
+      </div>
     </>
   );
 };
