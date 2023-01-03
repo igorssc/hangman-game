@@ -76,7 +76,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
     setChosenLetters(currentChosenLetters);
 
-    if (numErrors + 1 > 5) {
+    if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {

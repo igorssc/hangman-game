@@ -25,6 +25,7 @@ export const SecretWordStyled = styled.div<SecretWordStyledProps>`
     span {
       margin-top: 20px;
       width: 100%;
+      max-width: 90px;
       border-bottom: 6px solid #fff;
     }
   }
@@ -42,6 +43,8 @@ export const SecretWordStyled = styled.div<SecretWordStyledProps>`
 
       span {
         margin-top: 8px;
+        max-width: 50px;
+        border-width: 3px;
       }
     }
   }
