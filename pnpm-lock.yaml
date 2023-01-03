@@ -18,6 +18,7 @@ specifiers:
   tsparticles-preset-confetti: ^2.7.1
   tsparticles-preset-fireworks: ^2.7.1
   typescript: ^4.9.3
+  use-sound: ^4.0.1
   vite: ^4.0.0
   vite-plugin-pwa: ^0.14.0
 
@@ -31,6 +32,7 @@ dependencies:
   tsparticles-engine: 2.7.1
   tsparticles-preset-confetti: 2.7.1
   tsparticles-preset-fireworks: 2.7.1
+  use-sound: 4.0.1
 
 devDependencies:
   '@types/react': 18.0.26
@@ -2230,6 +2232,10 @@ packages:
     dependencies:
       react-is: 16.13.1
 
+  /howler/2.2.3:
+    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
+    dev: false
+
   /idb/7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: true
@@ -3161,6 +3167,14 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: true
+
+  /use-sound/4.0.1:
+    resolution: {integrity: sha512-hykJ86kNcu6y/FzlSHcQxhjSGMslZx2WlfLpZNoPbvueakv4OF3xPxEtGV2YmculrIaH0tPp9LtG4jgy17xMWg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      howler: 2.2.3
+    dev: false
 
   /vite-plugin-pwa/0.14.0_vite@4.0.3:
     resolution: {integrity: sha512-3wZx47PLWTckOQhc8Y6YZjAbNZ89Ovh4TdCT97MGhgl7aFd2LUekVnAmIgFwgMqyxzJ93nmkPF/ALpEW/i2qCg==}

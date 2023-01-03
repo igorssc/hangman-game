@@ -1,5 +1,12 @@
 import useEvent from "@react-hook/event";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import useSound from "use-sound";
+import errorSound from "../assets/audios/error.mp3";
+import gameOverSound from "../assets/audios/game-over.mp3";
+import helpSound from "../assets/audios/help.mp3";
+import moreThanTwoLettersSound from "../assets/audios/more-than-two-letters.mp3";
+import oneLetterSound from "../assets/audios/one-letter.mp3";
+import winnerSound from "../assets/audios/winner.mp3";
 import { letters } from "../utils/alphabet";
 import { removeSpecialCharacters } from "../utils/format";
 import { easyWords, hardWords } from "../utils/words";
@@ -34,6 +41,13 @@ export function GameProvider({ children }: GameProviderProps) {
   const [level, setLevel] = useState<1 | 2>(1);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isUsedHelp, setIsUsedHelp] = useState(false);
+
+  const [playSoundError] = useSound(errorSound);
+  const [playSoundGameOver] = useSound(gameOverSound);
+  const [playSoundWinner] = useSound(winnerSound);
+  const [playSoundOneLetter] = useSound(oneLetterSound);
+  const [playSoundMoreThanTwoLetters] = useSound(moreThanTwoLettersSound);
+  const [playSoundHelp] = useSound(helpSound);
 
   const selectRandomWord = () => {
     const words = level === 1 ? easyWords : hardWords;
@@ -79,25 +93,17 @@ export function GameProvider({ children }: GameProviderProps) {
       removeSpecialCharacters(letter).toUpperCase(),
     ];
 
-    if (isCorrect) {
-      const numberOfHits = secretWordFormated
-        .split("")
-        .filter((l) => l === letter);
-
-      setPoints(
-        (prev) =>
-          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
-      );
-    }
-
     if (!isCorrect) {
       setNumErrors((prev) => prev + 1);
+      playSoundError();
     }
 
     setChosenLetters(currentChosenLetters);
 
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
+
+      playSoundGameOver();
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
         if (l !== " " && !currentChosenLetters.includes(l)) {
@@ -108,8 +114,24 @@ export function GameProvider({ children }: GameProviderProps) {
       }, true);
 
       if (isWinner) {
+        playSoundWinner();
         setIsPlaying(false);
       }
+
+      const numberOfHits = secretWordFormated
+        .split("")
+        .filter((l) => l === letter);
+
+      !isWinner &&
+        numberOfHits.length > 0 &&
+        numberOfHits.length < 3 &&
+        playSoundOneLetter();
+      !isWinner && numberOfHits.length > 2 && playSoundMoreThanTwoLetters();
+
+      setPoints(
+        (prev) =>
+          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+      );
     }
   };
 
@@ -141,6 +163,8 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     selectedLetters.forEach((l) => setChosenLetters((prev) => [...prev, l]));
+
+    playSoundHelp();
 
     setIsUsedHelp(true);
   };
