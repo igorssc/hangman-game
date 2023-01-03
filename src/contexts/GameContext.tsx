@@ -59,7 +59,8 @@ export function GameProvider({ children }: GameProviderProps) {
   }, []);
 
   const checkLetter = (letter: string) => {
-    if (!removeSpecialCharacters(letter).match(/[A-Za-z]/)) return;
+    if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
+      return;
 
     const secretWordFormated = removeSpecialCharacters(secretWord);
 

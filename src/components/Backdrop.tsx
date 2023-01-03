@@ -1,3 +1,4 @@
+import useEvent from "@react-hook/event";
 import { useContext } from "react";
 import { GameContext } from "../contexts/GameContext";
 import { BackdropStyled, GameOver, Winner } from "./Backdrop.style";
@@ -6,6 +7,12 @@ import { Fireworks } from "./Fireworks";
 
 export const Backdrop = () => {
   const { numErrors, restart, secretWord, isPlaying } = useContext(GameContext);
+
+  useEvent(
+    document.querySelector("body"),
+    "keydown",
+    (event) => (event.key === "Escape" || event.key === "Enter") && restart()
+  );
 
   return (
     <>

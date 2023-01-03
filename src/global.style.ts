@@ -30,7 +30,6 @@ export const GlobalStyle = createGlobalStyle`
     max-width: 90%;
     justify-content: center;
     place-items: center;
-    min-height: 100vh;
     max-width: 1280px;
     padding: 20px;
   }

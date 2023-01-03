@@ -5,7 +5,7 @@ import { SecretWord } from "./SecretWord";
 export const Game = () => {
   return (
     <>
-      <GameArea id="game-area">
+      <GameArea>
         <HangmanAnimation />
         <SecretWord />
       </GameArea>

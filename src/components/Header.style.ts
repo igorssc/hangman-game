@@ -4,7 +4,7 @@ export const Title = styled.h1`
   font-family: low_budget;
   font-size: 42px;
   text-align: center;
-  margin-top: 70px;
+  margin-top: 20px;
 
   span {
     color: ${(props) => props.theme.colors.primary};
@@ -12,6 +12,7 @@ export const Title = styled.h1`
 
   @media (min-width: 768px) {
     font-size: 92px !important;
+    margin-top: 70px;
   }
 `;
 
