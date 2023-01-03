@@ -197,10 +197,18 @@ export function GameProvider({ children }: GameProviderProps) {
 
     setChosenLetters(currentChosenLetters);
 
+    const numberOfHits = secretWordFormated
+      .split("")
+      .filter((l) => l === letter);
+
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
       checkRecord();
       playSoundGameOver();
+      setPointsInTheRound(
+        (prev) =>
+          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+      );
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
         if (l !== " " && !currentChosenLetters.includes(l)) {
@@ -210,20 +218,10 @@ export function GameProvider({ children }: GameProviderProps) {
         }
       }, true);
 
-      const numberOfHits = secretWordFormated
-        .split("")
-        .filter((l) => l === letter);
-
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
-        setPoints(
-          (prev) =>
-            prev +
-            10 +
-            pointsInTheRound +
-            (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
-        );
+        setPoints((prev) => prev + 10 + pointsInTheRound);
         setPointsInTheRound(0);
       }
 
@@ -232,12 +230,6 @@ export function GameProvider({ children }: GameProviderProps) {
         numberOfHits.length < 3 &&
         playSoundOneLetter();
       !isWinner && numberOfHits.length > 2 && playSoundMoreThanTwoLetters();
-
-      !isWinner &&
-        setPointsInTheRound(
-          (prev) =>
-            prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
-        );
     }
   };
 
