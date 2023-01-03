@@ -1,3 +1,4 @@
+import { gql, useMutation, useQuery } from "@apollo/client";
 import useEvent from "@react-hook/event";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import useSound from "use-sound";
@@ -7,12 +8,21 @@ import helpSound from "../assets/audios/help.mp3";
 import moreThanTwoLettersSound from "../assets/audios/more-than-two-letters.mp3";
 import oneLetterSound from "../assets/audios/one-letter.mp3";
 import winnerSound from "../assets/audios/winner.mp3";
+import { getRecordsQueryResponse, GET_RECORDS } from "../db/getRecords";
 import { letters } from "../utils/alphabet";
 import { removeSpecialCharacters } from "../utils/format";
 import { easyWords, hardWords } from "../utils/words";
 
 interface GameProviderProps {
   children: ReactNode;
+}
+
+interface publishRecordMutationResponse {
+  publishVote: { id: string };
+}
+
+interface registerRecordMutationResponse {
+  createRecord: { id: string };
 }
 
 type GameData = {
@@ -28,6 +38,9 @@ type GameData = {
   help: () => void;
   isPlaying: boolean;
   isUsedHelp: boolean;
+  isRecord: boolean;
+  records: undefined | getRecordsQueryResponse["records"];
+  registerRecord: (name: string) => void;
 };
 
 export const GameContext = createContext({} as GameData);
@@ -41,6 +54,10 @@ export function GameProvider({ children }: GameProviderProps) {
   const [level, setLevel] = useState<1 | 2>(1);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isUsedHelp, setIsUsedHelp] = useState(false);
+  const [isRecord, setIsRecord] = useState(false);
+  const [records, setRecords] = useState<
+    undefined | getRecordsQueryResponse["records"]
+  >(undefined);
 
   const [playSoundError] = useSound(errorSound);
   const [playSoundGameOver] = useSound(gameOverSound);
@@ -48,6 +65,49 @@ export function GameProvider({ children }: GameProviderProps) {
   const [playSoundOneLetter] = useSound(oneLetterSound);
   const [playSoundMoreThanTwoLetters] = useSound(moreThanTwoLettersSound);
   const [playSoundHelp] = useSound(helpSound);
+
+  const { data: dataGetRecords, refetch: refetchGetRecords } =
+    useQuery<getRecordsQueryResponse>(GET_RECORDS, {
+      variables: {
+        level,
+      },
+    });
+
+  useEffect(() => {
+    refetchGetRecords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    refetchGetRecords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
+
+  useEffect(() => {
+    setRecords(dataGetRecords?.records);
+  }, [dataGetRecords]);
+
+  const REGISTER_RECORD = gql`
+    mutation RegisterRecord($name: String!, $score: Int!, $level: Int!) {
+      createRecord(data: { name: $name, score: $score, level: $level }) {
+        id
+      }
+    }
+  `;
+
+  const PUBLISH_RECORD = gql`
+    mutation PublishRecord($id: ID!) {
+      publishRecord(where: { id: $id }, to: PUBLISHED) {
+        id
+      }
+    }
+  `;
+
+  const [registerRecordMutateFunction] =
+    useMutation<registerRecordMutationResponse>(REGISTER_RECORD);
+
+  const [publishRecordMutateFunction] =
+    useMutation<publishRecordMutationResponse>(PUBLISH_RECORD);
 
   const selectRandomWord = () => {
     const words = level === 1 ? easyWords : hardWords;
@@ -78,6 +138,41 @@ export function GameProvider({ children }: GameProviderProps) {
     selectRandomWord();
   }, []);
 
+  const checkRecord = () => {
+    let isRecord = false;
+
+    if (!records || (records && records.length < 10)) {
+      isRecord = true;
+    }
+
+    if (!isRecord) {
+      records?.forEach((record) => {
+        record.score < points && (isRecord = true);
+      });
+    }
+
+    setIsRecord(isRecord);
+  };
+
+  const registerRecord = async (name: string) => {
+    try {
+      await registerRecordMutateFunction({
+        variables: { name, score: points, level },
+      }).then(async ({ data }) => {
+        await publishRecordMutateFunction({
+          variables: {
+            id: (data as registerRecordMutationResponse).createRecord.id,
+          },
+        }).then(() => {
+          refetchGetRecords();
+        });
+      });
+    } catch {
+    } finally {
+      restart();
+    }
+  };
+
   const checkLetter = (letter: string) => {
     if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
       return;
@@ -102,7 +197,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
-
+      checkRecord();
       playSoundGameOver();
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
@@ -116,6 +211,7 @@ export function GameProvider({ children }: GameProviderProps) {
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
+        setPoints((prev) => prev + 10);
       }
 
       const numberOfHits = secretWordFormated
@@ -183,6 +279,8 @@ export function GameProvider({ children }: GameProviderProps) {
       if (numErrors > 5) {
         setPoints(0);
       }
+
+      setIsRecord(false);
     }
 
     setNumErrors(0);
@@ -211,6 +309,9 @@ export function GameProvider({ children }: GameProviderProps) {
         isPlaying,
         help,
         isUsedHelp,
+        isRecord,
+        records,
+        registerRecord,
       }}
     >
       {children}

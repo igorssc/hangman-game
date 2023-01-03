@@ -1,18 +1,22 @@
+import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "styled-components";
 import { App } from "./App";
 import { GameProvider } from "./contexts/GameContext";
 import { GlobalStyle } from "./global.style";
+import { client } from "./lib/apollo";
 import { CustomTheme } from "./utils/Theme.style";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <GameProvider>
-      <ThemeProvider theme={CustomTheme}>
-        <App />
-        <GlobalStyle />
-      </ThemeProvider>
-    </GameProvider>
+    <ApolloProvider client={client}>
+      <GameProvider>
+        <ThemeProvider theme={CustomTheme}>
+          <App />
+          <GlobalStyle />
+        </ThemeProvider>
+      </GameProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );
