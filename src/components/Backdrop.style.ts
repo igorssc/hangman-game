@@ -89,6 +89,14 @@ export const GameOver = styled.div`
     > div {
       width: 100%;
       position: relative;
+      background: #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: stretch;
+
+      :focus-within {
+        outline: 3px solid ${(props) => props.theme.colors.secondary};
+      }
     }
 
     button {
@@ -97,7 +105,6 @@ export const GameOver = styled.div`
       border-radius: 0 4px 4px 0;
       border: none;
       position: relative;
-      top: 1px;
       background: ${(props) => props.theme.colors.secondary};
       cursor: pointer;
     }
@@ -109,10 +116,14 @@ export const GameOver = styled.div`
     input {
       height: 40px;
       padding: 5px;
-      border-radius: 4px 0 0 4px;
       border: none;
       width: calc(100% - 110px);
       font-size: 1rem;
+      background: transparent;
+
+      :focus {
+        outline: 0;
+      }
     }
   }
 

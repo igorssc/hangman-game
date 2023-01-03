@@ -88,7 +88,6 @@ export const easyWords = {
     "Jaca",
     "Laranja",
     "Limão",
-    "Lima",
     "Maçã",
     "Mamão",
     "Manga",
