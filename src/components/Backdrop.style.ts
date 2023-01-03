@@ -99,6 +99,7 @@ export const GameOver = styled.div`
       position: relative;
       top: 1px;
       background: ${(props) => props.theme.colors.secondary};
+      cursor: pointer;
     }
 
     button > span {

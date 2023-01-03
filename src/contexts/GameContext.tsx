@@ -210,16 +210,22 @@ export function GameProvider({ children }: GameProviderProps) {
         }
       }, true);
 
-      if (isWinner) {
-        playSoundWinner();
-        setIsPlaying(false);
-        setPoints((prev) => prev + 10 + pointsInTheRound);
-        setPointsInTheRound(0);
-      }
-
       const numberOfHits = secretWordFormated
         .split("")
         .filter((l) => l === letter);
+
+      if (isWinner) {
+        playSoundWinner();
+        setIsPlaying(false);
+        setPoints(
+          (prev) =>
+            prev +
+            10 +
+            pointsInTheRound +
+            (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+        );
+        setPointsInTheRound(0);
+      }
 
       !isWinner &&
         numberOfHits.length > 0 &&
@@ -227,10 +233,11 @@ export function GameProvider({ children }: GameProviderProps) {
         playSoundOneLetter();
       !isWinner && numberOfHits.length > 2 && playSoundMoreThanTwoLetters();
 
-      setPointsInTheRound(
-        (prev) =>
-          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
-      );
+      !isWinner &&
+        setPointsInTheRound(
+          (prev) =>
+            prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+        );
     }
   };
 
