@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-export const ButtonsFooter = styled.div`
+export const ButtonsStyled = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-  margin: 70px 0 20px;
+  margin: 70px 0;
 
   @media (max-width: 768px) {
     > .restart {
@@ -17,7 +17,6 @@ export const ButtonsFooter = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    margin-bottom: 40px;
     gap: 30px;
   }
 `;
