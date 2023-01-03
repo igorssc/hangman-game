@@ -27,6 +27,7 @@ interface registerRecordMutationResponse {
 
 type GameData = {
   points: number;
+  pointsInTheRound: number;
   tip: string;
   secretWord: string;
   numErrors: number;
@@ -47,6 +48,7 @@ export const GameContext = createContext({} as GameData);
 
 export function GameProvider({ children }: GameProviderProps) {
   const [points, setPoints] = useState(0);
+  const [pointsInTheRound, setPointsInTheRound] = useState(0);
   const [tip, setTip] = useState("");
   const [secretWord, setSecretWord] = useState("");
   const [numErrors, setNumErrors] = useState(0);
@@ -141,7 +143,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const checkRecord = () => {
     let isRecord = false;
 
-    if (!records || (records && records.length < 10)) {
+    if ((!records || (records && records.length < 10)) && points > 0) {
       isRecord = true;
     }
 
@@ -211,7 +213,8 @@ export function GameProvider({ children }: GameProviderProps) {
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
-        setPoints((prev) => prev + 10);
+        setPoints((prev) => prev + 10 + pointsInTheRound);
+        setPointsInTheRound(0);
       }
 
       const numberOfHits = secretWordFormated
@@ -224,7 +227,7 @@ export function GameProvider({ children }: GameProviderProps) {
         playSoundOneLetter();
       !isWinner && numberOfHits.length > 2 && playSoundMoreThanTwoLetters();
 
-      setPoints(
+      setPointsInTheRound(
         (prev) =>
           prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
       );
@@ -267,6 +270,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   useEffect(() => {
     setPoints(0);
+    setPointsInTheRound(0);
     restart();
   }, [level]);
 
@@ -279,10 +283,10 @@ export function GameProvider({ children }: GameProviderProps) {
       if (numErrors > 5) {
         setPoints(0);
       }
-
       setIsRecord(false);
     }
 
+    setPointsInTheRound(0);
     setNumErrors(0);
     setChosenLetters([]);
     selectRandomWord();
@@ -298,6 +302,7 @@ export function GameProvider({ children }: GameProviderProps) {
     <GameContext.Provider
       value={{
         points,
+        pointsInTheRound,
         tip,
         secretWord,
         numErrors,

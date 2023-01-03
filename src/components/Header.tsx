@@ -3,7 +3,7 @@ import { GameContext } from "../contexts/GameContext";
 import { Details, Title } from "./Header.style";
 
 export const Header = () => {
-  const { points, tip } = useContext(GameContext);
+  const { points, pointsInTheRound, tip } = useContext(GameContext);
 
   return (
     <>
@@ -12,7 +12,7 @@ export const Header = () => {
       </Title>
       <Details>
         <p>Dica: {tip}</p>
-        <p>Sua pontuação: {points}</p>
+        <p>Sua pontuação: {points + pointsInTheRound}</p>
       </Details>
     </>
   );
