@@ -18,7 +18,7 @@ interface GameProviderProps {
 }
 
 interface publishRecordMutationResponse {
-  publishVote: { id: string };
+  publishRecord: { id: string };
 }
 
 interface registerRecordMutationResponse {
