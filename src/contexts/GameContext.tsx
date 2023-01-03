@@ -36,18 +36,21 @@ export function GameProvider({ children }: GameProviderProps) {
 
     const tipsAvailable = Object.keys(words);
 
-    const tipSelected =
-      tipsAvailable[Math.floor(Math.random() * tipsAvailable.length)];
+    const randomWord = () => {
+      const tipSelected =
+        tipsAvailable[Math.floor(Math.random() * tipsAvailable.length)];
 
-    setTip(tipSelected.charAt(0).toUpperCase() + tipSelected.slice(1));
+      setTip(tipSelected.charAt(0).toUpperCase() + tipSelected.slice(1));
 
-    const randomWord = () =>
-      // @ts-ignore:next-line
-      words[tipSelected][Math.floor(Math.random() * words[tipSelected].length)];
+      return (words as any)[tipSelected][
+        Math.floor(Math.random() * (words as any)[tipSelected].length)
+      ] as string;
+    };
 
     let wordSelected = randomWord().toUpperCase() as string;
 
     while (wordSelected === secretWord) {
+      console.log("a");
       wordSelected = randomWord().toUpperCase();
     }
 
@@ -61,6 +64,8 @@ export function GameProvider({ children }: GameProviderProps) {
   const checkLetter = (letter: string) => {
     if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
       return;
+
+    if (chosenLetters.includes(letter)) return;
 
     const secretWordFormated = removeSpecialCharacters(secretWord);
 
