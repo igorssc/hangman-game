@@ -201,14 +201,17 @@ export function GameProvider({ children }: GameProviderProps) {
       .split("")
       .filter((l) => l === letter);
 
+    setPointsInTheRound(
+      (prev) =>
+        prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
+    );
+
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
+      setPointsInTheRound(0);
+      setPoints((prev) => prev + pointsInTheRound);
       checkRecord();
       playSoundGameOver();
-      setPointsInTheRound(
-        (prev) =>
-          prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
-      );
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
         if (l !== " " && !currentChosenLetters.includes(l)) {
@@ -221,8 +224,8 @@ export function GameProvider({ children }: GameProviderProps) {
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
-        setPoints((prev) => prev + 10 + pointsInTheRound);
         setPointsInTheRound(0);
+        setPoints((prev) => prev + 10 + pointsInTheRound + 1);
       }
 
       !isWinner &&
