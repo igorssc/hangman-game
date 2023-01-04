@@ -116,7 +116,7 @@ export function GameProvider({ children }: GameProviderProps) {
     wordsAlreadySelected.length > 0 &&
       wordsAlreadySelected.length === avaiableWords.length &&
       setWordsAlreadySelected([]);
-  }, [setWordsAlreadySelected]);
+  }, [wordsAlreadySelected]);
 
   useEffect(() => {
     onInitAvaiableWords();
@@ -170,9 +170,6 @@ export function GameProvider({ children }: GameProviderProps) {
   const selectRandomWord = () => {
     const words = level === 1 ? easyWords : hardWords;
 
-    console.log("level", level);
-    console.log("level", isChangingLevels);
-
     const tipsAvailable = Object.keys(words);
 
     const randomWord = () => {
@@ -194,7 +191,13 @@ export function GameProvider({ children }: GameProviderProps) {
       wordSelected = randomWord().toUpperCase();
     }
 
-    setWordsAlreadySelected((prev) => [...prev, wordSelected.toUpperCase()]);
+    if (!wordsAlreadySelected.includes(wordSelected)) {
+      setWordsAlreadySelected(() => [
+        ...wordsAlreadySelected,
+        wordSelected.toUpperCase(),
+      ]);
+    }
+
     setSecretWord(wordSelected.toUpperCase());
   };
 
