@@ -13,7 +13,8 @@ interface DialogPropsRestart {
 }
 
 const DialogRestart = ({ open, setOpen }: DialogPropsRestart) => {
-  const { restart } = useContext(GameContext);
+  const { restart, checkRecord, setIsIntentionToRestart } =
+    useContext(GameContext);
 
   const handleClose = () => {
     setOpen(false);
@@ -35,7 +36,12 @@ const DialogRestart = ({ open, setOpen }: DialogPropsRestart) => {
           <Button
             small
             onClick={() => {
-              restart({ isTotal: true });
+              const isRecord = checkRecord();
+              isRecord && setIsIntentionToRestart(true);
+              if (!isRecord) {
+                restart({ isTotal: true });
+              }
+
               handleClose();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
@@ -95,7 +101,7 @@ interface DialogPropsChangeLevel {
 }
 
 const DialogChangeLevel = ({ open, setOpen }: DialogPropsChangeLevel) => {
-  const { checkRecord, setIsChangingLevels, setLevel } =
+  const { checkRecord, setIsChangingLevels, setLevel, restart, level } =
     useContext(GameContext);
 
   const handleClose = () => {
@@ -120,9 +126,17 @@ const DialogChangeLevel = ({ open, setOpen }: DialogPropsChangeLevel) => {
             onClick={() => {
               const isRecord = checkRecord();
               isRecord && setIsChangingLevels(true);
-              console.log(isRecord);
               if (!isRecord) {
                 setLevel((prev) => (prev === 1 ? 2 : 1));
+                restart({ isTotal: true, isRandom: false });
+
+                localStorage.setItem(
+                  "p",
+                  JSON.stringify({
+                    l: level === 1 ? 2 : 1,
+                    p: 0,
+                  })
+                );
               }
               handleClose();
               window.scrollTo({ top: 0, behavior: "smooth" });

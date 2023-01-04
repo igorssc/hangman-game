@@ -34,6 +34,7 @@ interface registerRecordMutationResponse {
 
 type RestartType = {
   isTotal?: boolean;
+  isRandom?: boolean;
 };
 
 type GameData = {
@@ -56,6 +57,8 @@ type GameData = {
   checkRecord: () => boolean;
   isChangingLevels: boolean;
   setIsChangingLevels: Dispatch<SetStateAction<boolean>>;
+  isIntentionToRestart: boolean;
+  setIsIntentionToRestart: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GameContext = createContext({} as GameData);
@@ -81,6 +84,8 @@ export function GameProvider({ children }: GameProviderProps) {
   const [playSoundOneLetter] = useSound(oneLetterSound);
   const [playSoundMoreThanTwoLetters] = useSound(moreThanTwoLettersSound);
   const [playSoundHelp] = useSound(helpSound);
+
+  const [isIntentionToRestart, setIsIntentionToRestart] = useState(false);
 
   const [avaiableWords, setAvaiableWords] = useState<string[]>([]);
   const [wordsAlreadySelected, setWordsAlreadySelected] = useState<string[]>(
@@ -119,15 +124,14 @@ export function GameProvider({ children }: GameProviderProps) {
   }, [wordsAlreadySelected]);
 
   useEffect(() => {
-    onInitAvaiableWords();
-    restart({ isTotal: true });
-  }, [level]);
+    const data = localStorage.getItem("p");
+    if (data) {
+      const pointsSave = JSON.parse(data);
 
-  useEffect(() => {
-    const pointsSave = localStorage.getItem("p");
-
-    if (pointsSave) {
-      setPoints(+pointsSave);
+      if (+pointsSave.p > 0) {
+        setLevel(pointsSave.l);
+        setPoints(+pointsSave.p);
+      }
     }
   }, []);
 
@@ -138,6 +142,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
   useEffect(() => {
     refetchGetRecords();
+    onInitAvaiableWords();
+    selectRandomWord();
+    setWordsAlreadySelected([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
@@ -208,7 +215,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const checkRecord = () => {
     let isRecord = false;
 
-    if ((!records || (records && records.length < 10)) && points > 0) {
+    if (records && records.length < 10 && points > 0) {
       isRecord = true;
     }
 
@@ -240,7 +247,7 @@ export function GameProvider({ children }: GameProviderProps) {
   };
 
   const checkLetter = (letter: string) => {
-    if (!isPlaying || isChangingLevels) return;
+    if (!isPlaying || isChangingLevels || isIntentionToRestart) return;
 
     if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
       return;
@@ -276,8 +283,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setIsPlaying(false);
       checkRecord();
       playSoundGameOver();
-      console.log("1aaaa");
-      localStorage.setItem("p", "0");
+      localStorage.setItem("p", JSON.stringify({ l: level, p: 0 }));
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
         if (l !== " " && !currentChosenLetters.includes(l)) {
@@ -290,8 +296,6 @@ export function GameProvider({ children }: GameProviderProps) {
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
-        const pointsSave = points + 10 + 1;
-        localStorage.setItem("p", String(pointsSave));
 
         let wonUndefeated = true;
 
@@ -306,6 +310,12 @@ export function GameProvider({ children }: GameProviderProps) {
         if (wonUndefeated) {
           newPointsBonus += level === 1 ? 20 : 30;
         }
+
+        const dataSave = JSON.stringify({
+          l: level,
+          p: newPointsBonus + points + 1,
+        });
+        localStorage.setItem("p", dataSave);
 
         setPoints((prev) => prev + newPointsBonus);
       }
@@ -364,25 +374,26 @@ export function GameProvider({ children }: GameProviderProps) {
     restart({});
   };
 
-  const restart = ({ isTotal = false }: RestartType) => {
+  const restart = ({ isTotal = false, isRandom = true }: RestartType) => {
     if (isTotal) {
       if (points !== 0) {
         setPoints(0);
-        localStorage.setItem("p", "0");
+        localStorage.setItem("p", JSON.stringify({ l: level, p: 0 }));
       }
     }
 
     if (!isPlaying) {
       if (numErrors > 5) {
         setPoints(0);
-        localStorage.setItem("p", "0");
+        localStorage.setItem("p", JSON.stringify({ l: level, p: 0 }));
       }
       setIsRecord(false);
     }
 
+    setIsIntentionToRestart(false);
     setNumErrors(0);
     setChosenLetters([]);
-    selectRandomWord();
+    isRandom && selectRandomWord();
     setIsPlaying(true);
     setIsUsedHelp(false);
   };
@@ -413,6 +424,8 @@ export function GameProvider({ children }: GameProviderProps) {
         checkRecord,
         isChangingLevels,
         setIsChangingLevels,
+        isIntentionToRestart,
+        setIsIntentionToRestart,
       }}
     >
       {children}

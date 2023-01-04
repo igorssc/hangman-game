@@ -19,6 +19,7 @@ export const Backdrop = () => {
     isPlaying,
     isRecord,
     isChangingLevels,
+    isIntentionToRestart,
   } = useContext(GameContext);
 
   useEvent(
@@ -59,11 +60,16 @@ export const Backdrop = () => {
             {isPlaying && isRecord && <RecordComponent />}
           </GameOver>
         )}
-        <GameOver>
-          {isPlaying && isChangingLevels && isRecord && numErrors < 6 && (
+        {isPlaying && isChangingLevels && isRecord && numErrors < 6 && (
+          <GameOver>
             <RecordComponent />
-          )}
-        </GameOver>
+          </GameOver>
+        )}
+        {isPlaying && isIntentionToRestart && isRecord && numErrors < 6 && (
+          <GameOver>
+            <RecordComponent />
+          </GameOver>
+        )}
       </BackdropStyled>
     </>
   );
@@ -77,7 +83,9 @@ const RecordComponent = () => {
     isChangingLevels,
     setIsChangingLevels,
     setLevel,
+    restart,
     level,
+    isIntentionToRestart,
   } = useContext(GameContext);
 
   const [isButtonActive, setIsButtonActive] = useState(true);
@@ -105,6 +113,15 @@ const RecordComponent = () => {
     if (isChangingLevels) {
       setLevel((prev) => (prev === 1 ? 2 : 1));
       setIsChangingLevels(false);
+      restart({ isTotal: true, isRandom: false });
+      localStorage.setItem(
+        "p",
+        JSON.stringify({ l: level === 1 ? 2 : 1, p: 0 })
+      );
+    }
+
+    if (isIntentionToRestart) {
+      restart({ isTotal: true });
     }
 
     registerRecord(
