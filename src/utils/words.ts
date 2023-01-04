@@ -1,7 +1,4 @@
 export const easyWords = {
-  teste: ["oi"],
-};
-export const easyWordss = {
   cor: [
     "Amarelo",
     "Anil",
