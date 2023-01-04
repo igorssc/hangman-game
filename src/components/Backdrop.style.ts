@@ -118,7 +118,6 @@ export const RecordStyled = styled.div`
   width: 100%;
   margin-top: -100px;
   text-align: center;
-  display: flex;
   flex-direction: column;
   gap: 10px;
   justify-content: center;
@@ -142,6 +141,7 @@ export const RecordStyled = styled.div`
     margin-bottom: 50px;
     border: none;
     font-size: 1rem;
+    border-radius: 4px;
   }
 
   @media (max-width: 500px) {

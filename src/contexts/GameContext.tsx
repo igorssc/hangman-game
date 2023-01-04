@@ -344,7 +344,7 @@ export function GameProvider({ children }: GameProviderProps) {
     const selectedLetters = [] as string[];
 
     const removedLetters =
-      level === 1 ? Math.random() * (5 - 2) + 2 : Math.random() * (6 - 3) + 3;
+      level === 1 ? Math.random() * (7 - 3) + 3 : Math.random() * (4 - 2) + 2;
 
     while (selectedLetters.length < removedLetters) {
       const temporaryLetter =

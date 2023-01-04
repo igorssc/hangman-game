@@ -7,16 +7,16 @@ import { Dialog } from "./Dialog";
 export const Buttons = () => {
   const { help, isUsedHelp, level, points } = useContext(GameContext);
 
-  const [openDialogRestart, setOpenDialogRestart] = useState(false);
-  const [openDialogSkipWord, setOpenDialogSkipWord] = useState(false);
-  const [openDialogChangeLevel, setOpenDialogChangeLevel] = useState(false);
+  const [isOpenDialogRestart, setIsOpenDialogRestart] = useState(false);
+  const [isOpenDialogSkipWord, setIsOpenDialogSkipWord] = useState(false);
+  const [isOpenDialogChangeLevel, setIsOpenDialogChangeLevel] = useState(false);
 
   return (
     <>
       <ButtonsStyled>
         <Button
           onClick={() => {
-            setOpenDialogRestart(true);
+            setIsOpenDialogRestart(true);
           }}
           small
           scheme="primary"
@@ -26,7 +26,7 @@ export const Buttons = () => {
         </Button>
         <Button
           onClick={() => {
-            setOpenDialogSkipWord(true);
+            setIsOpenDialogSkipWord(true);
           }}
           small
           disabled={points < 200}
@@ -47,14 +47,14 @@ export const Buttons = () => {
           Ajuda 😍
         </Button>
         <Button
-          onClick={() => level !== 1 && setOpenDialogChangeLevel(true)}
+          onClick={() => level !== 1 && setIsOpenDialogChangeLevel(true)}
           small
           scheme={level === 1 ? "primary" : "secondary"}
         >
           Fácil
         </Button>
         <Button
-          onClick={() => level !== 2 && setOpenDialogChangeLevel(true)}
+          onClick={() => level !== 2 && setIsOpenDialogChangeLevel(true)}
           small
           scheme={level === 2 ? "primary" : "secondary"}
         >
@@ -62,14 +62,17 @@ export const Buttons = () => {
         </Button>
       </ButtonsStyled>
       <Dialog.ChangeLevel
-        open={openDialogChangeLevel}
-        setOpen={setOpenDialogChangeLevel}
+        open={isOpenDialogChangeLevel}
+        setOpen={setIsOpenDialogChangeLevel}
       />
       <Dialog.SkipWord
-        open={openDialogSkipWord}
-        setOpen={setOpenDialogSkipWord}
+        open={isOpenDialogSkipWord}
+        setOpen={setIsOpenDialogSkipWord}
       />
-      <Dialog.Restart open={openDialogRestart} setOpen={setOpenDialogRestart} />
+      <Dialog.Restart
+        open={isOpenDialogRestart}
+        setOpen={setIsOpenDialogRestart}
+      />
     </>
   );
 };
