@@ -252,9 +252,10 @@ export function GameProvider({ children }: GameProviderProps) {
     if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
       return;
 
-    if (chosenLetters.includes(letter)) return;
+    if (chosenLetters.includes(letter.toUpperCase())) return;
 
-    const secretWordFormated = removeSpecialCharacters(secretWord);
+    const secretWordFormated =
+      removeSpecialCharacters(secretWord).toUpperCase();
 
     const isCorrect = secretWordFormated.includes(letter.toUpperCase());
 
@@ -272,7 +273,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
     const numberOfHits = secretWordFormated
       .split("")
-      .filter((l) => l === letter);
+      .filter((l) => l.toUpperCase() === letter.toUpperCase());
 
     setPoints(
       (prev) =>
