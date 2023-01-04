@@ -1,4 +1,5 @@
 import { ApolloProvider } from "@apollo/client";
+import { SnackbarProvider } from "notistack";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "styled-components";
@@ -13,8 +14,10 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <ApolloProvider client={client}>
       <GameProvider>
         <ThemeProvider theme={CustomTheme}>
-          <App />
-          <GlobalStyle />
+          <SnackbarProvider maxSnack={1}>
+            <App />
+            <GlobalStyle />
+          </SnackbarProvider>
         </ThemeProvider>
       </GameProvider>
     </ApolloProvider>

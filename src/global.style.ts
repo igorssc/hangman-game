@@ -22,15 +22,5 @@ export const GlobalStyle = createGlobalStyle`
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
-  body {
-    margin: 0 auto;
-    display: flex;
-    min-width: 320px;
-    max-width: 90%;
-    justify-content: center;
-    place-items: center;
-    max-width: 1280px;
-    padding: 20px;
-  }
+  
 `;

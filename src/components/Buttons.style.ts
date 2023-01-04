@@ -16,7 +16,7 @@ export const ButtonsStyled = styled.div`
   }
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 30px;
   }
 `;

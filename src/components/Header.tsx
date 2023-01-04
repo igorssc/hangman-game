@@ -3,7 +3,7 @@ import { GameContext } from "../contexts/GameContext";
 import { Details, Title } from "./Header.style";
 
 export const Header = () => {
-  const { points, pointsInTheRound, tip } = useContext(GameContext);
+  const { points, tip } = useContext(GameContext);
 
   return (
     <>
@@ -12,7 +12,7 @@ export const Header = () => {
       </Title>
       <Details>
         <p>Dica: {tip}</p>
-        <p>Sua pontuação: {points + pointsInTheRound}</p>
+        <p>Sua pontuação: {points.toLocaleString("pt-BR")}</p>
       </Details>
     </>
   );

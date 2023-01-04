@@ -9,12 +9,13 @@ import { Records } from "./components/Records";
 import { GameContext } from "./contexts/GameContext";
 
 export function App() {
-  const { isPlaying } = useContext(GameContext);
+  const { isPlaying, isChangingLevels, isRecord } = useContext(GameContext);
 
   return (
     <>
+      {!isPlaying && <Backdrop />}
+      {isPlaying && isChangingLevels && isRecord && <Backdrop />}
       <Container>
-        {!isPlaying && <Backdrop />}
         <Header />
         <Game />
         <Letters />

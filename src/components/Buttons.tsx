@@ -1,24 +1,39 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GameContext } from "../contexts/GameContext";
 import { Button } from "./Button";
 import { ButtonsStyled } from "./Buttons.style";
+import { Dialog } from "./Dialog";
 
 export const Buttons = () => {
-  const { restart, help, isUsedHelp, setLevel, level } =
-    useContext(GameContext);
+  const { help, isUsedHelp, level, points } = useContext(GameContext);
+
+  const [openDialogRestart, setOpenDialogRestart] = useState(false);
+  const [openDialogSkipWord, setOpenDialogSkipWord] = useState(false);
+  const [openDialogChangeLevel, setOpenDialogChangeLevel] = useState(false);
 
   return (
     <>
       <ButtonsStyled>
         <Button
           onClick={() => {
-            restart();
+            setOpenDialogRestart(true);
           }}
           small
           scheme="primary"
           className="restart"
         >
           Reiniciar
+        </Button>
+        <Button
+          onClick={() => {
+            setOpenDialogSkipWord(true);
+          }}
+          small
+          disabled={points < 200}
+          scheme="primary"
+          className="help"
+        >
+          Pular 🤩
         </Button>
         <Button
           onClick={() => {
@@ -29,23 +44,32 @@ export const Buttons = () => {
           scheme="primary"
           className="help"
         >
-          Ajuda 🤩
+          Ajuda 😍
         </Button>
         <Button
-          onClick={() => setLevel(1)}
+          onClick={() => level !== 1 && setOpenDialogChangeLevel(true)}
           small
           scheme={level === 1 ? "primary" : "secondary"}
         >
           Fácil
         </Button>
         <Button
-          onClick={() => setLevel(2)}
+          onClick={() => level !== 2 && setOpenDialogChangeLevel(true)}
           small
           scheme={level === 2 ? "primary" : "secondary"}
         >
           Difícil
         </Button>
       </ButtonsStyled>
+      <Dialog.ChangeLevel
+        open={openDialogChangeLevel}
+        setOpen={setOpenDialogChangeLevel}
+      />
+      <Dialog.SkipWord
+        open={openDialogSkipWord}
+        setOpen={setOpenDialogSkipWord}
+      />
+      <Dialog.Restart open={openDialogRestart} setOpen={setOpenDialogRestart} />
     </>
   );
 };

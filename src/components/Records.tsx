@@ -21,7 +21,7 @@ export const Records = () => {
               {records.map((value) => (
                 <tr key={value.id}>
                   <td>{value.name}</td>
-                  <td>{value.score}</td>
+                  <td>{value.score.toLocaleString("pt-BR")}</td>
                   <td>
                     {new Date(value.createdAt).toLocaleDateString("pt-BR")}
                   </td>

@@ -1,6 +1,13 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import useEvent from "@react-hook/event";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import useSound from "use-sound";
 import errorSound from "../assets/audios/error.mp3";
 import gameOverSound from "../assets/audios/game-over.mp3";
@@ -25,30 +32,36 @@ interface registerRecordMutationResponse {
   createRecord: { id: string };
 }
 
+type RestartType = {
+  isTotal?: boolean;
+};
+
 type GameData = {
   points: number;
-  pointsInTheRound: number;
   tip: string;
   secretWord: string;
   numErrors: number;
   chosenLetters: string[];
   level: 1 | 2;
-  setLevel: React.Dispatch<React.SetStateAction<1 | 2>>;
+  setLevel: Dispatch<SetStateAction<1 | 2>>;
   checkLetter: (letter: string) => void;
-  restart: () => void;
+  restart: (props: RestartType) => void;
   help: () => void;
   isPlaying: boolean;
   isUsedHelp: boolean;
   isRecord: boolean;
   records: undefined | getRecordsQueryResponse["records"];
   registerRecord: (name: string) => void;
+  skipWord: () => void;
+  checkRecord: () => boolean;
+  isChangingLevels: boolean;
+  setIsChangingLevels: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GameContext = createContext({} as GameData);
 
 export function GameProvider({ children }: GameProviderProps) {
   const [points, setPoints] = useState(0);
-  const [pointsInTheRound, setPointsInTheRound] = useState(0);
   const [tip, setTip] = useState("");
   const [secretWord, setSecretWord] = useState("");
   const [numErrors, setNumErrors] = useState(0);
@@ -60,6 +73,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const [records, setRecords] = useState<
     undefined | getRecordsQueryResponse["records"]
   >(undefined);
+  const [isChangingLevels, setIsChangingLevels] = useState(false);
 
   const [playSoundError] = useSound(errorSound);
   const [playSoundGameOver] = useSound(gameOverSound);
@@ -68,12 +82,54 @@ export function GameProvider({ children }: GameProviderProps) {
   const [playSoundMoreThanTwoLetters] = useSound(moreThanTwoLettersSound);
   const [playSoundHelp] = useSound(helpSound);
 
+  const [avaiableWords, setAvaiableWords] = useState<string[]>([]);
+  const [wordsAlreadySelected, setWordsAlreadySelected] = useState<string[]>(
+    []
+  );
+
   const { data: dataGetRecords, refetch: refetchGetRecords } =
     useQuery<getRecordsQueryResponse>(GET_RECORDS, {
       variables: {
         level,
       },
     });
+
+  const onInitAvaiableWords = () => {
+    const words = level === 1 ? easyWords : hardWords;
+
+    const tipsAvailable = Object.keys(words);
+
+    let avaiableCurrentWords = [] as string[];
+
+    tipsAvailable.forEach((v) => {
+      avaiableCurrentWords = [...avaiableCurrentWords, ...(words as any)[v]];
+    });
+
+    setAvaiableWords(avaiableCurrentWords);
+  };
+
+  useEffect(() => {
+    onInitAvaiableWords();
+  }, []);
+
+  useEffect(() => {
+    wordsAlreadySelected.length > 0 &&
+      wordsAlreadySelected.length === avaiableWords.length &&
+      setWordsAlreadySelected([]);
+  }, [setWordsAlreadySelected]);
+
+  useEffect(() => {
+    onInitAvaiableWords();
+    restart({ isTotal: true });
+  }, [level]);
+
+  useEffect(() => {
+    const pointsSave = localStorage.getItem("p");
+
+    if (pointsSave) {
+      setPoints(+pointsSave);
+    }
+  }, []);
 
   useEffect(() => {
     refetchGetRecords();
@@ -114,13 +170,17 @@ export function GameProvider({ children }: GameProviderProps) {
   const selectRandomWord = () => {
     const words = level === 1 ? easyWords : hardWords;
 
+    console.log("level", level);
+
     const tipsAvailable = Object.keys(words);
 
     const randomWord = () => {
       const tipSelected =
         tipsAvailable[Math.floor(Math.random() * tipsAvailable.length)];
 
-      setTip(tipSelected.charAt(0).toUpperCase() + tipSelected.slice(1));
+      setTip(
+        tipSelected.charAt(0).toUpperCase() + tipSelected.slice(1).toLowerCase()
+      );
 
       return (words as any)[tipSelected][
         Math.floor(Math.random() * (words as any)[tipSelected].length)
@@ -129,10 +189,11 @@ export function GameProvider({ children }: GameProviderProps) {
 
     let wordSelected = randomWord().toUpperCase() as string;
 
-    while (wordSelected === secretWord) {
+    while (wordsAlreadySelected.includes(wordSelected)) {
       wordSelected = randomWord().toUpperCase();
     }
 
+    setWordsAlreadySelected((prev) => [...prev, wordSelected.toUpperCase()]);
     setSecretWord(wordSelected.toUpperCase());
   };
 
@@ -154,6 +215,8 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     setIsRecord(isRecord);
+
+    return isRecord;
   };
 
   const registerRecord = async (name: string) => {
@@ -171,11 +234,13 @@ export function GameProvider({ children }: GameProviderProps) {
       });
     } catch {
     } finally {
-      restart();
+      restart({});
     }
   };
 
   const checkLetter = (letter: string) => {
+    if (!isPlaying || isChangingLevels) return;
+
     if (letter.length > 1 || !removeSpecialCharacters(letter).match(/[A-Za-z]/))
       return;
 
@@ -201,17 +266,16 @@ export function GameProvider({ children }: GameProviderProps) {
       .split("")
       .filter((l) => l === letter);
 
-    setPointsInTheRound(
+    setPoints(
       (prev) =>
         prev + (level === 1 ? numberOfHits.length : numberOfHits.length * 2)
     );
 
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
-      setPointsInTheRound(0);
-      setPoints((prev) => prev + pointsInTheRound);
       checkRecord();
       playSoundGameOver();
+      localStorage.setItem("p", "0");
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
         if (l !== " " && !currentChosenLetters.includes(l)) {
@@ -224,8 +288,24 @@ export function GameProvider({ children }: GameProviderProps) {
       if (isWinner) {
         playSoundWinner();
         setIsPlaying(false);
-        setPointsInTheRound(0);
-        setPoints((prev) => prev + 10 + pointsInTheRound + 1);
+        const pointsSave = points + 10 + 1;
+        localStorage.setItem("p", String(pointsSave));
+
+        let wonUndefeated = true;
+
+        currentChosenLetters.forEach((l) => {
+          if (!secretWordFormated.includes(l.toUpperCase())) {
+            wonUndefeated = false;
+          }
+        });
+
+        let newPointsBonus = level === 1 ? 10 : 20;
+
+        if (wonUndefeated) {
+          newPointsBonus += level === 1 ? 20 : 30;
+        }
+
+        setPoints((prev) => prev + newPointsBonus);
       }
 
       !isWinner &&
@@ -270,25 +350,32 @@ export function GameProvider({ children }: GameProviderProps) {
     setIsUsedHelp(true);
   };
 
-  useEffect(() => {
-    setPoints(0);
-    setPointsInTheRound(0);
-    restart();
-  }, [level]);
-
   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
     checkLetter(event.key);
   };
 
-  const restart = () => {
+  const skipWord = () => {
+    if (points < 200) return;
+
+    setPoints((prev) => prev - 200);
+
+    restart({});
+  };
+
+  const restart = ({ isTotal = false }: RestartType) => {
+    if (isTotal) {
+      setPoints(0);
+      localStorage.setItem("p", "0");
+    }
+
     if (!isPlaying) {
       if (numErrors > 5) {
         setPoints(0);
+        localStorage.setItem("p", "0");
       }
       setIsRecord(false);
     }
 
-    setPointsInTheRound(0);
     setNumErrors(0);
     setChosenLetters([]);
     selectRandomWord();
@@ -304,7 +391,6 @@ export function GameProvider({ children }: GameProviderProps) {
     <GameContext.Provider
       value={{
         points,
-        pointsInTheRound,
         tip,
         secretWord,
         numErrors,
@@ -319,6 +405,10 @@ export function GameProvider({ children }: GameProviderProps) {
         isRecord,
         records,
         registerRecord,
+        skipWord,
+        checkRecord,
+        isChangingLevels,
+        setIsChangingLevels,
       }}
     >
       {children}

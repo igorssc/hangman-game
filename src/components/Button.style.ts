@@ -38,6 +38,6 @@ export const ButtonStyled = styled.button<ButtonProps>`
   `}
 
   :hover {
-    filter: brightness(0.9);
+    filter: ${(props) => !props.disabled && "brightness(0.9)"};
   }
 `;
