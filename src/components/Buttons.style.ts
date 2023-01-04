@@ -10,9 +10,6 @@ export const ButtonsStyled = styled.div`
     > .restart {
       grid-column-end: span 2;
     }
-    > .help {
-      grid-column-end: span 2;
-    }
   }
 
   @media (min-width: 768px) {

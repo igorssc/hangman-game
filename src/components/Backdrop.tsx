@@ -103,8 +103,8 @@ const RecordComponent = () => {
     setIsButtonActive(false);
 
     if (isChangingLevels) {
-      setIsChangingLevels(false);
       setLevel((prev) => (prev === 1 ? 2 : 1));
+      setIsChangingLevels(false);
     }
 
     registerRecord(

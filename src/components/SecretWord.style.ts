@@ -2,37 +2,45 @@ import styled from "styled-components";
 
 interface SecretWordStyledProps {
   word: string;
+  biggestWord: number;
 }
 
 export const SecretWordStyled = styled.div<SecretWordStyledProps>`
   width: 100%;
-  display: grid;
-  grid-template-columns: ${(props) =>
-    `repeat(${props.word?.length > 8 ? 8 : props.word?.length}, 1fr)`};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 
   > div {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-items: baseline;
-    justify-content: end;
-    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
     font-size: 2rem;
     padding: 10px;
-    min-height: 60px;
-    min-width: 20px;
     flex-wrap: wrap;
+    gap: 15px;
 
-    span {
+    > div {
+      width: calc(100% / ${(props) => props.biggestWord} - 15px);
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      line-height: 30px;
+    }
+
+    span:nth-child(1) {
+      height: 30px;
+    }
+
+    span:nth-child(2) {
       margin-top: 20px;
       width: 100%;
-      max-width: 90px;
-      border-bottom: 6px solid #fff;
-    }
-  }
-
-  > div.space {
-    span {
-      border-bottom: 6px solid transparent;
+      border-bottom: 4px solid #fff;
     }
   }
 
@@ -40,11 +48,15 @@ export const SecretWordStyled = styled.div<SecretWordStyledProps>`
     > div {
       font-size: 1rem;
       min-height: 30px;
+      gap: 10px;
 
-      span {
+      > div {
+        width: calc(100% / ${(props) => props.biggestWord} - 10px);
+      }
+
+      span:nth-child(2) {
         margin-top: 8px;
-        max-width: 50px;
-        border-width: 3px;
+        border-width: 2px;
       }
     }
   }

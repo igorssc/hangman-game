@@ -10,7 +10,8 @@ export const GameArea = styled.div`
   align-items: center;
 
   @media (max-width: 992px) {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 70px;
   }

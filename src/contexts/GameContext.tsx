@@ -171,6 +171,7 @@ export function GameProvider({ children }: GameProviderProps) {
     const words = level === 1 ? easyWords : hardWords;
 
     console.log("level", level);
+    console.log("level", isChangingLevels);
 
     const tipsAvailable = Object.keys(words);
 
@@ -232,10 +233,7 @@ export function GameProvider({ children }: GameProviderProps) {
           refetchGetRecords();
         });
       });
-    } catch {
-    } finally {
-      restart({});
-    }
+    } catch {}
   };
 
   const checkLetter = (letter: string) => {
@@ -275,6 +273,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setIsPlaying(false);
       checkRecord();
       playSoundGameOver();
+      console.log("1aaaa");
       localStorage.setItem("p", "0");
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
@@ -364,8 +363,10 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const restart = ({ isTotal = false }: RestartType) => {
     if (isTotal) {
-      setPoints(0);
-      localStorage.setItem("p", "0");
+      if (points !== 0) {
+        setPoints(0);
+        localStorage.setItem("p", "0");
+      }
     }
 
     if (!isPlaying) {

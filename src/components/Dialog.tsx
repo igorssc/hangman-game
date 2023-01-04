@@ -29,10 +29,11 @@ const DialogRestart = ({ open, setOpen }: DialogPropsRestart) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} scheme="secondary">
+          <Button small autoFocus onClick={handleClose} scheme="secondary">
             Cancelar
           </Button>
           <Button
+            small
             onClick={() => {
               restart({ isTotal: true });
               handleClose();
@@ -69,10 +70,11 @@ const DialogSkipWord = ({ open, setOpen }: DialogPropsSkipWord) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} scheme="secondary">
+          <Button small autoFocus onClick={handleClose} scheme="secondary">
             Cancelar
           </Button>
           <Button
+            small
             onClick={() => {
               skipWord();
               handleClose();
@@ -110,10 +112,11 @@ const DialogChangeLevel = ({ open, setOpen }: DialogPropsChangeLevel) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} scheme="secondary">
+          <Button small autoFocus onClick={handleClose} scheme="secondary">
             Cancelar
           </Button>
           <Button
+            small
             onClick={() => {
               const isRecord = checkRecord();
               isRecord && setIsChangingLevels(true);

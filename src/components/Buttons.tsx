@@ -31,7 +31,7 @@ export const Buttons = () => {
           small
           disabled={points < 200}
           scheme="primary"
-          className="help"
+          className="skip"
         >
           Pular 🤩
         </Button>
