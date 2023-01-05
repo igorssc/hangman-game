@@ -342,16 +342,37 @@ export function GameProvider({ children }: GameProviderProps) {
       (l) => !secretWordLetters.includes(l)
     );
 
+    const groupOfWords = {
+      1: ["A", "E", "I", "O", "U", "R", "S", "P", "M"],
+      2: ["N", "B", "C", "G", "F", "L", "T", "J", "D"],
+      3: ["H", "V", "X", "Z", "Y", "Q", "W", "K"],
+    };
+
     const selectedLetters = [] as string[];
 
-    const removedLetters =
-      level === 1 ? Math.random() * (7 - 3) + 3 : Math.random() * (4 - 2) + 2;
+    const removedLetters = Math.random() * (7 - 4) + 4;
 
     while (selectedLetters.length < removedLetters) {
-      const temporaryLetter =
-        wrongLetters[Math.floor(Math.random() * wrongLetters.length)];
+      let selectedGroupOfWords = 1 as 1 | 2 | 3;
 
-      if (!selectedLetters.includes(temporaryLetter)) {
+      const randomValue = Math.random() * (100 - 1) + 1;
+
+      if (randomValue <= 15) {
+        selectedGroupOfWords = 3;
+      }
+      if (randomValue > 15 && randomValue <= 45) {
+        selectedGroupOfWords = 2;
+      }
+
+      const temporaryLetter =
+        groupOfWords[selectedGroupOfWords][
+          Math.floor(Math.random() * groupOfWords[selectedGroupOfWords].length)
+        ];
+
+      if (
+        !selectedLetters.includes(temporaryLetter) &&
+        wrongLetters.includes(temporaryLetter)
+      ) {
         selectedLetters.push(temporaryLetter);
       }
     }
