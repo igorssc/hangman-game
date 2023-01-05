@@ -350,17 +350,17 @@ export function GameProvider({ children }: GameProviderProps) {
 
     const selectedLetters = [] as string[];
 
-    const removedLetters = Math.random() * (7 - 4) + 4;
+    const removedLetters = Math.random() * (6 - 4) + 4;
 
     while (selectedLetters.length < removedLetters) {
       let selectedGroupOfWords = 1 as 1 | 2 | 3;
 
       const randomValue = Math.random() * (100 - 1) + 1;
 
-      if (randomValue <= 15) {
+      if (randomValue <= 10) {
         selectedGroupOfWords = 3;
       }
-      if (randomValue > 15 && randomValue <= 45) {
+      if (randomValue > 10 && randomValue <= 45) {
         selectedGroupOfWords = 2;
       }
 
