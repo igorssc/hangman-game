@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const RecordStyled = styled.table`
   width: 100%;
+  border-radius: 5px;
   margin: auto;
   background: ${(props) => props.theme.colors.secondary};
   border-collapse: collapse;
