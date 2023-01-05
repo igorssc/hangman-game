@@ -2,7 +2,8 @@ import styled from "styled-components";
 import type { ButtonProps } from "./Button";
 
 export const ButtonStyled = styled.button<ButtonProps>`
-  padding: 15px 70px;
+  width: 100%;
+  padding: 15px 0px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
