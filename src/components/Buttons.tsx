@@ -29,16 +29,24 @@ export const Buttons = () => {
         </Button>
         <Button
           onClick={() => {
-            if (points < 200) {
-              enqueueSnackbar("Você precisa ter ao menos 200 pontos", {
-                variant: "warning",
-              });
+            if (
+              (level === 1 && points < 150) ||
+              (level === 2 && points < 200)
+            ) {
+              enqueueSnackbar(
+                `Você precisa ter ao menos ${level === 1 ? 150 : 200} pontos`,
+                {
+                  variant: "warning",
+                }
+              );
             } else {
               setIsOpenDialogSkipWord(true);
             }
           }}
           small
-          isDisabled={points < 200}
+          isDisabled={
+            (level === 1 && points < 150) || (level === 2 && points < 200)
+          }
           scheme="primary"
           className="skip"
         >

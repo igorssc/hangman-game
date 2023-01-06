@@ -57,7 +57,7 @@ interface DialogPropsSkipWord {
 }
 
 const DialogSkipWord = ({ open, setOpen }: DialogPropsSkipWord) => {
-  const { skipWord } = useContext(GameContext);
+  const { skipWord, level } = useContext(GameContext);
 
   const handleClose = () => {
     setOpen(false);
@@ -69,7 +69,7 @@ const DialogSkipWord = ({ open, setOpen }: DialogPropsSkipWord) => {
         <DialogTitle>Tem certeza?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Pular a palavra te custará 200 pts
+            Pular a palavra te custará {level === 1 ? 150 : 200} pts
           </DialogContentText>
         </DialogContent>
         <DialogActions>

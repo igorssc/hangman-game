@@ -396,9 +396,9 @@ export function GameProvider({ children }: GameProviderProps) {
   };
 
   const skipWord = () => {
-    if (points < 200) return;
+    if ((level === 1 && points < 150) || (level === 2 && points < 200)) return;
 
-    setPoints((prev) => prev - 200);
+    setPoints((prev) => prev - (level === 1 ? 150 : 200));
 
     restart({});
   };
