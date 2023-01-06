@@ -30,6 +30,10 @@ export const ButtonStyled = styled.button<ButtonProps>`
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   filter: ${(props) => props.disabled && "brightness(0.5)"};
 
+  ${(props) =>
+    props.isDisabled &&
+    "filter: brightness(0.5); :hover{filter: brightness(0.5);}"}
+
   @media (min-width: 768px) {
     padding: 25px 0px;
   }
@@ -46,6 +50,7 @@ export const ButtonStyled = styled.button<ButtonProps>`
   `}
 
   :hover {
-    filter: ${(props) => !props.disabled && "brightness(0.9)"};
+    filter: ${(props) =>
+      !props.disabled && !props.isDisabled && "brightness(0.9)"};
   }
 `;

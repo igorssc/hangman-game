@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack";
 import { useContext, useState } from "react";
 import { GameContext } from "../contexts/GameContext";
 import { Button } from "./Button";
@@ -10,6 +11,8 @@ export const Buttons = () => {
   const [isOpenDialogRestart, setIsOpenDialogRestart] = useState(false);
   const [isOpenDialogSkipWord, setIsOpenDialogSkipWord] = useState(false);
   const [isOpenDialogChangeLevel, setIsOpenDialogChangeLevel] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <>
@@ -26,10 +29,16 @@ export const Buttons = () => {
         </Button>
         <Button
           onClick={() => {
-            setIsOpenDialogSkipWord(true);
+            if (points < 200) {
+              enqueueSnackbar("Você precisa ter ao menos 200 pontos", {
+                variant: "warning",
+              });
+            } else {
+              setIsOpenDialogSkipWord(true);
+            }
           }}
           small
-          disabled={points < 200}
+          isDisabled={points < 200}
           scheme="primary"
           className="skip"
         >

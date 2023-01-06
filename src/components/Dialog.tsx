@@ -16,9 +16,7 @@ const DialogRestart = ({ open, setOpen }: DialogPropsRestart) => {
   const { restart, checkRecord, setIsIntentionToRestart } =
     useContext(GameContext);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { ButtonStyled } from "./Button.style";
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   scheme?: "primary" | "secondary" | "tertiary";
   small?: boolean;
+  isDisabled?: boolean;
 }
 
 export const Button = ({

@@ -3,7 +3,7 @@ import { GameContext } from "../contexts/GameContext";
 import { RecordStyled } from "./Records.style";
 
 export const Records = () => {
-  const { level, records } = useContext(GameContext);
+  const { records } = useContext(GameContext);
 
   return (
     <>
