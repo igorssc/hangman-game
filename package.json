@@ -1,5 +1,5 @@
 {
-  "name": "tic-tac-toe",
+  "name": "hangman-game",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -38,16 +38,15 @@
   "resolutions": {
     "styled-components": "^5"
   },
-  "description": "![Featured](https://user-images.githubusercontent.com/26682297/210121033-ff4c3a99-ee49-4ba3-bd39-07556ee6a097.jpg)",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/igorssc/tic-tac-toe.git"
+    "url": "git+https://github.com/igorssc/hangman-game.git"
   },
   "author": "Igor Santos",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/igorssc/tic-tac-toe/issues"
+    "url": "https://github.com/igorssc/hangman-game/issues"
   },
-  "homepage": "https://github.com/igorssc/tic-tac-toe#readme"
+  "homepage": "https://github.com/igorssc/hangman-game#readme"
 }
