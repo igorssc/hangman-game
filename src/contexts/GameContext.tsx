@@ -124,15 +124,17 @@ export function GameProvider({ children }: GameProviderProps) {
   }, [wordsAlreadySelected]);
 
   useEffect(() => {
-    const data = localStorage.getItem("p");
-    if (data) {
-      const pointsSave = JSON.parse(data);
+    try {
+      const data = localStorage.getItem("p");
+      if (data) {
+        const pointsSave = JSON.parse(data);
 
-      if (+pointsSave.p > 0) {
-        setLevel(pointsSave.l);
-        setPoints(+pointsSave.p);
+        if ((+pointsSave.p > 0 && +pointsSave.l === 1) || +pointsSave.l === 2) {
+          setLevel(+pointsSave.l as 1 | 2);
+          setPoints(+pointsSave.p);
+        }
       }
-    }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -306,10 +308,15 @@ export function GameProvider({ children }: GameProviderProps) {
           }
         });
 
-        let newPointsBonus = level === 1 ? 10 : 20;
+        let newPointsBonus = level === 1 ? 15 : 25;
+
+        newPointsBonus -= Math.round(numErrors / 2);
+
+        newPointsBonus =
+          isUsedHelp && level === 1 ? newPointsBonus - 3 : newPointsBonus - 5;
 
         if (wonUndefeated) {
-          newPointsBonus += level === 1 ? 20 : 30;
+          newPointsBonus += level === 1 ? 10 : 20;
         }
 
         const dataSave = JSON.stringify({
