@@ -1,9 +1,10 @@
+import { SpeakerHigh, SpeakerSlash } from "phosphor-react";
 import { useContext } from "react";
 import { GameContext } from "../contexts/GameContext";
 import { Details, Title } from "./Header.style";
 
 export const Header = () => {
-  const { points, tip } = useContext(GameContext);
+  const { points, tip, isSound, setIsSound } = useContext(GameContext);
 
   return (
     <>
@@ -12,7 +13,27 @@ export const Header = () => {
       </Title>
       <Details>
         <p>Dica: {tip}</p>
-        <p>Sua pontuação: {points.toLocaleString("pt-BR")}</p>
+        <p>
+          Sua pontuação: {points.toLocaleString("pt-BR")}&nbsp;|&nbsp;
+          {isSound && (
+            <SpeakerHigh
+              color="#ffffff"
+              size={25}
+              weight="bold"
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsSound(false)}
+            />
+          )}
+          {!isSound && (
+            <SpeakerSlash
+              color="#b40404"
+              size={25}
+              weight="bold"
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsSound(true)}
+            />
+          )}
+        </p>
       </Details>
     </>
   );

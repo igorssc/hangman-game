@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import useEvent from "@react-hook/event";
 import {
   createContext,
@@ -15,21 +15,21 @@ import helpSound from "../assets/audios/help.mp3";
 import moreThanTwoLettersSound from "../assets/audios/more-than-two-letters.mp3";
 import oneLetterSound from "../assets/audios/one-letter.mp3";
 import winnerSound from "../assets/audios/winner.mp3";
+import {
+  CREATE_RECORD,
+  registerRecordMutationResponse,
+} from "../db/createRecord";
 import { getRecordsQueryResponse, GET_RECORDS } from "../db/getRecords";
+import {
+  publishRecordMutationResponse,
+  PUBLISH_RECORD,
+} from "../db/publishRecord";
 import { letters } from "../utils/alphabet";
 import { removeSpecialCharacters } from "../utils/format";
 import { easyWords, hardWords } from "../utils/words";
 
 interface GameProviderProps {
   children: ReactNode;
-}
-
-interface publishRecordMutationResponse {
-  publishRecord: { id: string };
-}
-
-interface registerRecordMutationResponse {
-  createRecord: { id: string };
 }
 
 type RestartType = {
@@ -59,6 +59,8 @@ type GameData = {
   setIsChangingLevels: Dispatch<SetStateAction<boolean>>;
   isIntentionToRestart: boolean;
   setIsIntentionToRestart: Dispatch<SetStateAction<boolean>>;
+  isSound: boolean;
+  setIsSound: Dispatch<SetStateAction<boolean>>;
 };
 
 export const GameContext = createContext({} as GameData);
@@ -84,6 +86,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const [playSoundOneLetter] = useSound(oneLetterSound);
   const [playSoundMoreThanTwoLetters] = useSound(moreThanTwoLettersSound);
   const [playSoundHelp] = useSound(helpSound);
+  const [isSound, setIsSound] = useState(true);
 
   const [isIntentionToRestart, setIsIntentionToRestart] = useState(false);
 
@@ -154,24 +157,8 @@ export function GameProvider({ children }: GameProviderProps) {
     setRecords(dataGetRecords?.records);
   }, [dataGetRecords]);
 
-  const REGISTER_RECORD = gql`
-    mutation RegisterRecord($name: String!, $score: Int!, $level: Int!) {
-      createRecord(data: { name: $name, score: $score, level: $level }) {
-        id
-      }
-    }
-  `;
-
-  const PUBLISH_RECORD = gql`
-    mutation PublishRecord($id: ID!) {
-      publishRecord(where: { id: $id }, to: PUBLISHED) {
-        id
-      }
-    }
-  `;
-
   const [registerRecordMutateFunction] =
-    useMutation<registerRecordMutationResponse>(REGISTER_RECORD);
+    useMutation<registerRecordMutationResponse>(CREATE_RECORD);
 
   const [publishRecordMutateFunction] =
     useMutation<publishRecordMutationResponse>(PUBLISH_RECORD);
@@ -268,7 +255,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
     if (!isCorrect) {
       setNumErrors((prev) => prev + 1);
-      playSoundError();
+      isSound && playSoundError();
     }
 
     setChosenLetters(currentChosenLetters);
@@ -285,7 +272,7 @@ export function GameProvider({ children }: GameProviderProps) {
     if (!isCorrect && numErrors === 5) {
       setIsPlaying(false);
       checkRecord();
-      playSoundGameOver();
+      isSound && playSoundGameOver();
       localStorage.setItem("p", JSON.stringify({ l: level, p: 0 }));
     } else {
       const isWinner = secretWordFormated.split("").reduce((prev, l) => {
@@ -297,7 +284,7 @@ export function GameProvider({ children }: GameProviderProps) {
       }, true);
 
       if (isWinner) {
-        playSoundWinner();
+        isSound && playSoundWinner();
         setIsPlaying(false);
 
         let wonUndefeated = true;
@@ -331,8 +318,12 @@ export function GameProvider({ children }: GameProviderProps) {
       !isWinner &&
         numberOfHits.length > 0 &&
         numberOfHits.length < 3 &&
+        isSound &&
         playSoundOneLetter();
-      !isWinner && numberOfHits.length > 2 && playSoundMoreThanTwoLetters();
+      !isWinner &&
+        numberOfHits.length > 2 &&
+        isSound &&
+        playSoundMoreThanTwoLetters();
     }
   };
 
@@ -386,7 +377,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
     selectedLetters.forEach((l) => setChosenLetters((prev) => [...prev, l]));
 
-    playSoundHelp();
+    isSound && playSoundHelp();
 
     setIsUsedHelp(true);
   };
@@ -455,6 +446,8 @@ export function GameProvider({ children }: GameProviderProps) {
         setIsChangingLevels,
         isIntentionToRestart,
         setIsIntentionToRestart,
+        isSound,
+        setIsSound,
       }}
     >
       {children}

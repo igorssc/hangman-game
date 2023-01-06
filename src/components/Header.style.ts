@@ -28,6 +28,12 @@ export const Details = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   @media (max-width: 350px) {
     font-size: 0.8rem;
   }
