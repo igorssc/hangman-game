@@ -35,7 +35,7 @@ export const Backdrop = () => {
           <Winner>
             <h1>Vitória</h1>
             <h2>{true && "Você acertou a palavra, parabéns!"}</h2>
-            <Button onClick={() => restart({})} scheme="secondary">
+            <Button onClick={() => restart({})} scheme="tertiary">
               Continuar
             </Button>
             <Fireworks />
@@ -53,7 +53,7 @@ export const Backdrop = () => {
               </>
             )}
             {!isRecord && (
-              <Button onClick={() => restart({})} scheme="secondary">
+              <Button onClick={() => restart({})} scheme="tertiary">
                 Jogar novamente
               </Button>
             )}
@@ -85,7 +85,6 @@ const RecordComponent = () => {
     setLevel,
     restart,
     level,
-    isIntentionToRestart,
   } = useContext(GameContext);
 
   const [isButtonActive, setIsButtonActive] = useState(true);
@@ -145,7 +144,7 @@ const RecordComponent = () => {
 
         <Button
           onClick={handleNewRecord}
-          scheme="secondary"
+          scheme="tertiary"
           disabled={!isButtonActive}
         >
           Continuar

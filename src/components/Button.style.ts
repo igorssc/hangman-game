@@ -15,11 +15,18 @@ export const ButtonStyled = styled.button<ButtonProps>`
   width: 350px;
   max-width: 100%;
   border: none;
-  color: ${(props) => (props.scheme === "primary" ? "#242424" : "#fff")};
+  color: ${(props) =>
+    props.scheme === "primary"
+      ? "#242424"
+      : props.scheme === "secondary"
+      ? "#fff"
+      : "#242424"};
   background: ${(props) =>
     props.scheme === "primary"
       ? props.theme.colors.primary
-      : props.theme.colors.secondary};
+      : props.scheme === "secondary"
+      ? props.theme.colors.secondary
+      : props.theme.colors.tertiary};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   filter: ${(props) => props.disabled && "brightness(0.5)"};
 

@@ -40,7 +40,6 @@ export const Winner = styled.div`
     font-size: 22px;
     line-height: 44px;
     text-align: center;
-    color: #fed7aa;
     margin-bottom: 70px;
   }
 
