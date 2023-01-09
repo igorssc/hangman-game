@@ -14,14 +14,18 @@ export const Header = () => {
       <Details>
         <p>Dica: {tip}</p>
         <p>
-          Sua pontuação: {points.toLocaleString("pt-BR")}&nbsp;|&nbsp;
+          Sua pontuação: {points.toLocaleString("pt-BR")}
+          &nbsp;&nbsp;|&nbsp;&nbsp;
           {isSound && (
             <SpeakerHigh
               color="#ffffff"
               size={25}
               weight="bold"
               style={{ cursor: "pointer" }}
-              onClick={() => setIsSound(false)}
+              onClick={() => {
+                setIsSound(false);
+                localStorage.setItem("s", String(false));
+              }}
             />
           )}
           {!isSound && (
@@ -30,7 +34,10 @@ export const Header = () => {
               size={25}
               weight="bold"
               style={{ cursor: "pointer" }}
-              onClick={() => setIsSound(true)}
+              onClick={() => {
+                setIsSound(true);
+                localStorage.setItem("s", String(true));
+              }}
             />
           )}
         </p>

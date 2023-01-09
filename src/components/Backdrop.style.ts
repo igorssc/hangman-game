@@ -32,7 +32,7 @@ export const Winner = styled.div`
   h1 {
     font-family: low_budget;
     font-size: 86px;
-    color: #eab308;
+    color: ${(props) => props.theme.colors.primary};
     text-align: center;
   }
 
@@ -79,7 +79,7 @@ export const GameOver = styled.div`
   h1 {
     font-family: low_budget;
     font-size: 48px;
-    color: #eab308;
+    color: ${(props) => props.theme.colors.primary};
     word-wrap: break-word;
   }
 
@@ -124,7 +124,7 @@ export const RecordStyled = styled.div`
   display: block;
 
   h3 {
-    color: #eab308;
+    color: ${(props) => props.theme.colors.primary};
     font-size: 2rem;
   }
 

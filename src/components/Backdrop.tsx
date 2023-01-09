@@ -35,9 +35,7 @@ export const Backdrop = () => {
           <Winner>
             <h1>Vitória</h1>
             <h2>{true && "Você acertou a palavra, parabéns!"}</h2>
-            <Button onClick={() => restart({})} scheme="tertiary">
-              Continuar
-            </Button>
+            <Button onClick={() => restart({})}>Continuar</Button>
             <Fireworks />
           </Winner>
         )}
@@ -53,9 +51,7 @@ export const Backdrop = () => {
               </>
             )}
             {!isRecord && (
-              <Button onClick={() => restart({})} scheme="tertiary">
-                Jogar novamente
-              </Button>
+              <Button onClick={() => restart({})}>Jogar novamente</Button>
             )}
             {isPlaying && isRecord && <RecordComponent />}
           </GameOver>
@@ -142,11 +138,7 @@ const RecordComponent = () => {
           onChange={handleName}
         />
 
-        <Button
-          onClick={handleNewRecord}
-          scheme="tertiary"
-          disabled={!isButtonActive}
-        >
+        <Button onClick={handleNewRecord} disabled={!isButtonActive}>
           Continuar
         </Button>
       </RecordStyled>

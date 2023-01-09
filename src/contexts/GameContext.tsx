@@ -141,6 +141,16 @@ export function GameProvider({ children }: GameProviderProps) {
   }, []);
 
   useEffect(() => {
+    try {
+      const data = localStorage.getItem("s");
+
+      if (data) {
+        setIsSound(data === "false" ? false : true);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
     refetchGetRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

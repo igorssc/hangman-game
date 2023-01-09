@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from "react";
 import { ButtonStyled } from "./Button.style";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  scheme?: "primary" | "secondary" | "tertiary";
+  scheme?: "primary" | "secondary";
   small?: boolean;
   isDisabled?: boolean;
 }
